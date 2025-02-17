@@ -33,6 +33,7 @@ com/compiler/delphi/DelphiParser$TypeDefinitionContext.class
 com/compiler/delphi/DelphiParser$UnlabelledStatementContext.class
 com/compiler/delphi/DelphiParser$TagContext.class
 com/compiler/delphi/DelphiParser$PointerTypeContext.class
+com/compiler/delphi/DelphiInterpreter$ParameterDefinition.class
 com/compiler/delphi/DelphiParser$CompoundStatementContext.class
 com/compiler/delphi/DelphiParser$SignContext.class
 com/compiler/delphi/DelphiParser$CaseStatementContext.class
@@ -74,6 +75,8 @@ com/compiler/delphi/DelphiParser$FormalParameterListContext.class
 com/compiler/delphi/DelphiParser$RepetetiveStatementContext.class
 com/compiler/delphi/DelphiParser$UnsignedConstantContext.class
 com/compiler/delphi/DelphiParser$EmptyStatement_Context.class
+com/compiler/delphi/Main.class
+com/compiler/delphi/DelphiInterpreter$ClassDefinition.class
 com/compiler/delphi/DelphiParser$ConstListContext.class
 com/compiler/delphi/DelphiBaseVisitor.class
 com/compiler/delphi/DelphiParser$RepeatStatementContext.class
@@ -81,6 +84,7 @@ com/compiler/delphi/DelphiParser$ProcedureTypeContext.class
 com/compiler/delphi/DelphiParser$ClassMethodDeclarationContext.class
 com/compiler/delphi/DelphiParser$FixedPartContext.class
 com/compiler/delphi/DelphiParser$StructuredStatementContext.class
+com/compiler/delphi/DelphiInterpreter$MethodDefinition.class
 com/compiler/delphi/DelphiParser$TermContext.class
 com/compiler/delphi/DelphiParser$ArrayTypeContext.class
 com/compiler/delphi/DelphiParser$ActualParameterContext.class
@@ -90,6 +94,7 @@ com/compiler/delphi/DelphiParser$SimpleExpressionContext.class
 com/compiler/delphi/DelphiParser$ComponentTypeContext.class
 com/compiler/delphi/DelphiParser$FunctionDeclarationContext.class
 com/compiler/delphi/DelphiParser$FileTypeContext.class
+com/compiler/delphi/DelphiInterpreter.class
 com/compiler/delphi/DelphiParser$ForStatementContext.class
 com/compiler/delphi/DelphiParser$LabelDeclarationPartContext.class
 com/compiler/delphi/DelphiParser$FieldListContext.class
@@ -111,7 +116,9 @@ com/compiler/delphi/DelphiParser$MethodDeclarationContext.class
 com/compiler/delphi/DelphiParser$Set_Context.class
 com/compiler/delphi/DelphiParser$ConstructorDeclarationContext.class
 com/compiler/delphi/DelphiParser$ResultTypeContext.class
+com/compiler/delphi/DelphiInterpreter$FieldDefinition.class
 com/compiler/delphi/DelphiParser$SetTypeContext.class
 com/compiler/delphi/DelphiParser$RecordSectionContext.class
 com/compiler/delphi/DelphiParser$InitialValueContext.class
 com/compiler/delphi/DelphiParser$ForListContext.class
+com/compiler/delphi/DelphiInterpreter$SymbolTable.class
