@@ -1,56 +1,30 @@
-program BankAccount;
+PROGRAM TestInheritance;
 
-class Account
-    private
-        balance: integer;
-        accountNumber: string;
-    
-    public
-        constructor create(number: string; initialBalance: integer);
-        destructor destroy;
-        
-        function getBalance: integer;
-        procedure deposit(amount: integer);
-        procedure withdraw(amount: integer);
-end;
+CLASS Animal
+PUBLIC
+  constructor Create;
+  procedure Destroy;
+  name: STRING;
+END;
 
-constructor Account.create(number: string; initialBalance: integer);
-begin
-    accountNumber := number;
-    balance := initialBalance;
-end;
+CLASS Dog INHERITS Animal
+PRIVATE
+  breed: STRING;
+PUBLIC
+  constructor Create;
+  procedure Destroy;
+END;
 
-destructor Account.destroy;
-begin
-    // Cleanup code would go here
-end;
+constructor Animal.Create;
+BEGIN
+  name := 'Generic Animal';
+END;
 
-function Account.getBalance: integer;
-begin
-    getBalance := balance;
-end;
+constructor Dog.Create;
+BEGIN
+  breed := 'Unknown';
+  name := 'Generic Dog';
+END;
 
-procedure Account.deposit(amount: integer);
-begin
-    balance := balance + amount;
-end;
-
-procedure Account.withdraw(amount: integer);
-begin
-    if amount <= balance then
-        balance := balance - amount;
-end;
-
-var
-    myAccount: Account;
-begin
-    myAccount := Account.create('1234-5678', 1000);
-    
-    writeln('Initial balance: ', myAccount.getBalance);
-    myAccount.deposit(500);
-    writeln('After deposit: ', myAccount.getBalance);
-    myAccount.withdraw(200);
-    writeln('After withdrawal: ', myAccount.getBalance);
-    
-    myAccount.destroy;
-end.
+BEGIN
+END.

@@ -1,37 +1,32 @@
 package com.compiler.delphi;
 
+import org.junit.Test;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class DelphiTest {
-    
-    private ParseTree parse(String input) {
-        CharStream charStream = CharStreams.fromString(input);
-        DelphiLexer lexer = new DelphiLexer(charStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        DelphiParser parser = new DelphiParser(tokens);
-        return parser.program();
-    }
-    
     @Test
     public void testBasicClassDeclaration() {
-        String program = """
-            program TestProgram;
-            class Person
-                private
-                    name: string;
-                    age: integer;
-                public
-                    constructor create(n: string; a: integer);
-                    function getName: string;
-            end;
-            begin
-            end.
-            """;
-            
-        ParseTree tree = parse(program);
+        String input = "PROGRAM Test;\n" +
+                      "CLASS Animal\n" +
+                      "PUBLIC\n" +
+                      "  constructor Create;\n" +
+                      "  name: STRING;\n" +
+                      "END;\n" +
+                      "\n" +
+                      "constructor Animal.Create;\n" +
+                      "BEGIN\n" +
+                      "  name := 'Generic Animal';\n" +
+                      "END;\n" +
+                      "\n" +
+                      "BEGIN\n" +
+                      "END.";
+
+        DelphiLexer lexer = new DelphiLexer(CharStreams.fromString(input));
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        DelphiParser parser = new DelphiParser(tokens);
+        ParseTree tree = parser.program();
+
         DelphiInterpreter interpreter = new DelphiInterpreter();
         interpreter.visit(tree);
     }

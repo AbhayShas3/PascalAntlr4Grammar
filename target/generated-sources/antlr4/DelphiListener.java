@@ -20,6 +20,16 @@ public interface DelphiListener extends ParseTreeListener {
 	 */
 	void exitProgram(DelphiParser.ProgramContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link DelphiParser#declarations}.
+	 * @param ctx the parse tree
+	 */
+	void enterDeclarations(DelphiParser.DeclarationsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DelphiParser#declarations}.
+	 * @param ctx the parse tree
+	 */
+	void exitDeclarations(DelphiParser.DeclarationsContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DelphiParser#programHeading}.
 	 * @param ctx the parse tree
 	 */
@@ -70,6 +80,16 @@ public interface DelphiListener extends ParseTreeListener {
 	 */
 	void exitClassName(DelphiParser.ClassNameContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link DelphiParser#visibilityBlock}.
+	 * @param ctx the parse tree
+	 */
+	void enterVisibilityBlock(DelphiParser.VisibilityBlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DelphiParser#visibilityBlock}.
+	 * @param ctx the parse tree
+	 */
+	void exitVisibilityBlock(DelphiParser.VisibilityBlockContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DelphiParser#baseClassName}.
 	 * @param ctx the parse tree
 	 */
@@ -100,6 +120,16 @@ public interface DelphiListener extends ParseTreeListener {
 	 */
 	void exitVisibilitySection(DelphiParser.VisibilitySectionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link DelphiParser#visibility}.
+	 * @param ctx the parse tree
+	 */
+	void enterVisibility(DelphiParser.VisibilityContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DelphiParser#visibility}.
+	 * @param ctx the parse tree
+	 */
+	void exitVisibility(DelphiParser.VisibilityContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DelphiParser#classVarDeclaration}.
 	 * @param ctx the parse tree
 	 */
@@ -109,6 +139,16 @@ public interface DelphiListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitClassVarDeclaration(DelphiParser.ClassVarDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DelphiParser#methodBlock}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodBlock(DelphiParser.MethodBlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DelphiParser#methodBlock}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodBlock(DelphiParser.MethodBlockContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DelphiParser#methodDeclaration}.
 	 * @param ctx the parse tree

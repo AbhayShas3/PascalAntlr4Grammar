@@ -41,41 +41,37 @@ options {
 }
 
 program
-    : programHeading (INTERFACE)? (classDeclarationPart)* block DOT EOF
-    ;
+   : programHeading block DOT EOF
+   ;
 
+
+declarations
+   : (classDeclarationPart | procedureAndFunctionDeclarationPart | constructorImplementation)*
+   ;
 programHeading
-    : PROGRAM identifier (LPAREN identifierList RPAREN)? SEMI
-    | UNIT identifier SEMI
-    ;
-
+   : PROGRAM identifier (LPAREN identifierList RPAREN)? SEMI
+   ;
 identifier
     : IDENT
     ;
 
 block
-    : (
-        labelDeclarationPart
-        | constantDefinitionPart
-        | typeDefinitionPart
-        | variableDeclarationPart
-        | procedureAndFunctionDeclarationPart
-        | classMethodImplementation
-        | usesUnitsPart
-        | IMPLEMENTATION
-    )* compoundStatement
-    ;
+   : (classDeclarationPart | procedureAndFunctionDeclarationPart | constructorImplementation)* compoundStatement
+   ;
 
 // Class-related rules
 classDeclarationPart
-    : CLASS className (INHERITS baseClassName)? 
-      classBlock
-      END SEMI
+    : CLASS className (INHERITS baseClassName)? visibilityBlock END SEMI
     ;
 
+
 className
-    : identifier
-    ;
+   : identifier
+   ;
+
+visibilityBlock
+   : (visibilitySection)*
+   ;
 
 baseClassName
     : identifier
@@ -86,19 +82,36 @@ classBlock
     ;
 
 visibilitySection
-    : (PRIVATE | PUBLIC | PROTECTED) (classVarDeclaration | methodDeclaration)*
+    : visibility (
+        classVarDeclaration
+        | methodDeclaration 
+        | destructorDeclaration
+        | procedureDeclaration
+    )*
     ;
+
+
+visibility
+   : PRIVATE
+   | PUBLIC
+   | PROTECTED
+   ;
 
 classVarDeclaration
     : identifier COLON type_ SEMI
     ;
 
+methodBlock
+    : SEMI block
+    | block
+    ;
+
 methodDeclaration
-    : (constructorDeclaration | destructorDeclaration | classMethodDeclaration) SEMI
+    : (constructorDeclaration | destructorDeclaration)
     ;
 
 constructorDeclaration
-    : CONSTRUCTOR identifier (LPAREN formalParameterList RPAREN)?
+    : CONSTRUCTOR identifier (LPAREN formalParameterList? RPAREN)? SEMI
     ;
 
 destructorDeclaration
@@ -111,20 +124,20 @@ classMethodDeclaration
     ;
 
 classMethodImplementation
-    : (constructorImplementation | destructorImplementation | methodImplementation)
-    ;
+: (constructorImplementation | destructorImplementation | methodImplementation)
+;
 
 constructorImplementation
-    : CONSTRUCTOR className DOT identifier (LPAREN formalParameterList RPAREN)? SEMI block
-    ;
+   : CONSTRUCTOR className DOT identifier SEMI block
+   ;
 
 destructorImplementation
     : DESTRUCTOR className DOT identifier SEMI block
     ;
 
 methodImplementation
-    : (FUNCTION | PROCEDURE) className DOT identifier (LPAREN formalParameterList RPAREN)? (COLON resultType)? SEMI block
-    ;
+: (FUNCTION | PROCEDURE) className DOT identifier (LPAREN formalParameterList RPAREN)? (COLON resultType)? SEMI block
+;
 
 // Original Pascal rules
 usesUnitsPart

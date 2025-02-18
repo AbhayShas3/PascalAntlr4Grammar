@@ -1,48 +1,30 @@
-program BankAccount;
+PROGRAM TestInheritance;
 
-class Account
-    private
-        balance: integer;
-        accountNumber: string;
-    
-    public
-        constructor create;
-        function getBalance: integer;
-        procedure deposit;
-        procedure withdraw;
-end;
+CLASS Animal
+PUBLIC
+  constructor Create;
+  procedure Destroy;
+  name: STRING;
+END;
 
-{ Constructor implementation }
-constructor create.
-begin
-    accountNumber := '1234-5678';
-    balance := 1000
-end;
+CLASS Dog INHERITS Animal
+PRIVATE
+  breed: STRING;
+PUBLIC
+  constructor Create;
+  procedure Destroy;
+END;
 
-{ Method implementations }
-function getBalance: integer;
-begin
-    getBalance := balance
-end;
+constructor Animal.Create;
+BEGIN
+  name := 'Generic Animal';
+END;
 
-procedure deposit;
-begin
-    balance := balance + 500
-end;
+constructor Dog.Create;
+BEGIN
+  breed := 'Unknown';
+  name := 'Generic Dog';
+END;
 
-procedure withdraw;
-begin
-    if balance >= 200 then
-        balance := balance - 200
-end;
-
-var
-    myAccount: Account;
-begin
-    myAccount := Account.create;
-    writeln(myAccount.getBalance);
-    myAccount.deposit;
-    writeln(myAccount.getBalance);
-    myAccount.withdraw;
-    writeln(myAccount.getBalance)
-end.
+BEGIN
+END.

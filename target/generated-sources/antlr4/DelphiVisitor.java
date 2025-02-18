@@ -19,6 +19,12 @@ public interface DelphiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProgram(DelphiParser.ProgramContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link DelphiParser#declarations}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDeclarations(DelphiParser.DeclarationsContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link DelphiParser#programHeading}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -49,6 +55,12 @@ public interface DelphiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClassName(DelphiParser.ClassNameContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link DelphiParser#visibilityBlock}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVisibilityBlock(DelphiParser.VisibilityBlockContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link DelphiParser#baseClassName}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -67,11 +79,23 @@ public interface DelphiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVisibilitySection(DelphiParser.VisibilitySectionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link DelphiParser#visibility}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVisibility(DelphiParser.VisibilityContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link DelphiParser#classVarDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitClassVarDeclaration(DelphiParser.ClassVarDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DelphiParser#methodBlock}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethodBlock(DelphiParser.MethodBlockContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DelphiParser#methodDeclaration}.
 	 * @param ctx the parse tree

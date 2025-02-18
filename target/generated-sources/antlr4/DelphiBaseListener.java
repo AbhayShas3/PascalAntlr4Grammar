@@ -31,6 +31,18 @@ public class DelphiBaseListener implements DelphiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDeclarations(DelphiParser.DeclarationsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDeclarations(DelphiParser.DeclarationsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterProgramHeading(DelphiParser.ProgramHeadingContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -91,6 +103,18 @@ public class DelphiBaseListener implements DelphiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterVisibilityBlock(DelphiParser.VisibilityBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVisibilityBlock(DelphiParser.VisibilityBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBaseClassName(DelphiParser.BaseClassNameContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -127,6 +151,18 @@ public class DelphiBaseListener implements DelphiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterVisibility(DelphiParser.VisibilityContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVisibility(DelphiParser.VisibilityContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterClassVarDeclaration(DelphiParser.ClassVarDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -134,6 +170,18 @@ public class DelphiBaseListener implements DelphiListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitClassVarDeclaration(DelphiParser.ClassVarDeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodBlock(DelphiParser.MethodBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodBlock(DelphiParser.MethodBlockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
