@@ -7,7 +7,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Main class for the Delphi interpreter.
+ * Handles file reading, parsing, and interpretation.
+ */
 public class Main {
+    
     public static void main(String[] args) {
         if (args.length < 1) {
             System.err.println("Error: Please provide a Delphi source file path");
@@ -17,23 +22,48 @@ public class Main {
         try {
             // Read the input file
             String input = Files.readString(Paths.get(args[0]));
+            System.out.println("Interpreting file: " + args[0]);
             
-            // Create a CharStream from the input
+            // Create a character stream from the input
             CharStream charStream = CharStreams.fromString(input);
             
-            // Create lexer
+            // Create the lexer
             DelphiLexer lexer = new DelphiLexer(charStream);
             
-            // Create token stream
+            // Create the token stream
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             
-            // Create parser
+            // Create the parser
             DelphiParser parser = new DelphiParser(tokens);
             
-            // Parse the input
+            // Enable error recovery to continue parsing after syntax errors
+            parser.setErrorHandler(new DefaultErrorStrategy());
+            
+            // Register an error listener to print syntax errors
+            parser.removeErrorListeners();
+            parser.addErrorListener(new BaseErrorListener() {
+                @Override
+                public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, 
+                                        int line, int charPositionInLine, String msg, 
+                                        RecognitionException e) {
+                    System.err.println("Syntax error at line " + line + ":" + charPositionInLine + " - " + msg);
+                }
+            });
+            
+            // Parse the program
+            System.out.println("Parsing...");
             ParseTree tree = parser.program();
             
-            // Create and run interpreter
+            // Check for syntax errors
+            if (parser.getNumberOfSyntaxErrors() > 0) {
+                System.err.println("Parsing completed with " + parser.getNumberOfSyntaxErrors() + " syntax errors.");
+                System.exit(1);
+            }
+            
+            System.out.println("Parsing completed successfully.");
+            
+            // Create and run the interpreter
+            System.out.println("Starting interpretation...");
             DelphiInterpreter interpreter = new DelphiInterpreter();
             interpreter.visit(tree);
             
