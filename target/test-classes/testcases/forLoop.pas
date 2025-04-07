@@ -1,11 +1,10 @@
-program forLoop;
+program ForLoopTest;
 var
-    x : integer;
-    i : integer;
+  i: Integer;
 begin
-    x := 0;
-    for i := 1 to 5 do
-    begin
-        x := x + 1;
-    end;
+ 
+  for i := 1 to 5 do
+  begin
+    writeln(i);
+  end;
 end.

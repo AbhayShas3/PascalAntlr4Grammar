@@ -401,14 +401,41 @@ public class DelphiInterpreter extends DelphiBaseVisitor<Object> {
      * Visit repetitive statement (while, repeat, for)
      */
     @Override
-    public Object visitRepetitiveStatement(DelphiParser.RepetitiveStatementContext ctx) {
-        if (ctx.whileStatement() != null) {
-            return visit(ctx.whileStatement());
-        } else if (ctx.repeatStatement() != null) {
-            return visit(ctx.repeatStatement());
-        } else if (ctx.forStatement() != null) {
-            return visit(ctx.forStatement());
-        }
+    public Object visitRepeatStatement(DelphiParser.RepeatStatementContext ctx) {
+        do {
+            // Create a new scope for each iteration
+            scopes.push(new HashMap<>());
+            
+            // Execute the statement list
+            visit(ctx.statementList());
+            
+            // Remove the scope
+            scopes.pop();
+            
+            // Handle break/continue
+            if (breakFlag) {
+                breakFlag = false;
+                break;
+            }
+            
+            if (continueFlag) {
+                continueFlag = false;
+            }
+            
+            // Evaluate the condition (continue until condition is true)
+            Object conditionObj = visit(ctx.expression());
+            
+            if (!(conditionObj instanceof Boolean)) {
+                throw new RuntimeException("REPEAT-UNTIL condition must evaluate to a Boolean, got: " + conditionObj);
+            }
+            
+            // If condition is true, we exit the loop
+            if ((Boolean) conditionObj) {
+                break;
+            }
+            
+        } while (true); // We handle the exit condition inside the loop
+        
         return null;
     }
 

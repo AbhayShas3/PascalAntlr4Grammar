@@ -16,24 +16,66 @@
       <plugin>
         <groupId>org.antlr</groupId>
         <artifactId>antlr4-maven-plugin</artifactId>
-        <version>4.13.1</version>
+        <version>${antlr4.version}</version>
         <executions>
           <execution>
+            <id>antlr</id>
+            <phase>generate-sources</phase>
             <goals>
               <goal>antlr4</goal>
             </goals>
           </execution>
         </executions>
         <configuration>
-          <sourceDirectory>${project.basedir}/src/main/antlr4/com/compiler/delphi</sourceDirectory>
-          <outputDirectory>${project.basedir}/target/generated-sources/antlr4/com/compiler/delphi</outputDirectory>
-          <listener>true</listener>
+          <sourceDirectory>${project.basedir}/src/main/antlr4</sourceDirectory>
+          <outputDirectory>${project.build.directory}/generated-sources/antlr4</outputDirectory>
           <visitor>true</visitor>
+          <listener>true</listener>
+          <arguments>
+            <argument>-package</argument>
+            <argument>com.compiler.delphi</argument>
+          </arguments>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/antlr4</source>
+              </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-test-source</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/antlr4</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0</version>
+        <configuration>
+          <trimStackTrace>false</trimStackTrace>
+          <useFile>false</useFile>
+          <redirectTestOutputToFile>false</redirectTestOutputToFile>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
@@ -57,6 +99,32 @@
             <goals>
               <goal>shade</goal>
             </goals>
+            <configuration>
+              <transformers>
+                <transformer>
+                  <mainClass>com.compiler.delphi.Main</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -87,5 +155,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>4.13.2</junit.version>
     <antlr4.version>4.13.1</antlr4.version>
+    <generated.sources.dir>${project.build.directory}/generated-sources/antlr4</generated.sources.dir>
   </properties>
 </project>

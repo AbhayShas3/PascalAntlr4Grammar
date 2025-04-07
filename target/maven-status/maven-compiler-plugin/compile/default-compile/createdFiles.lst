@@ -31,7 +31,6 @@ com/compiler/delphi/DelphiParser$DestructorDeclarationContext.class
 com/compiler/delphi/DelphiParser$IdentifierContext.class
 com/compiler/delphi/DelphiParser$TypeDefinitionContext.class
 com/compiler/delphi/DelphiParser$UnlabelledStatementContext.class
-com/compiler/delphi/Delphi.interp
 com/compiler/delphi/DelphiParser$TagContext.class
 com/compiler/delphi/DelphiParser$PointerTypeContext.class
 com/compiler/delphi/DelphiParser$CompoundStatementContext.class
@@ -69,7 +68,6 @@ com/compiler/delphi/DelphiParser$RepetitiveStatementContext.class
 com/compiler/delphi/DelphiParser$MemberDeclarationContext.class
 com/compiler/delphi/DelphiParser$UnsignedConstantContext.class
 com/compiler/delphi/Main.class
-Delphi.tokens
 com/compiler/delphi/DelphiParser$ConstListContext.class
 com/compiler/delphi/DelphiBaseVisitor.class
 com/compiler/delphi/DelphiParser$RepeatStatementContext.class
@@ -95,12 +93,10 @@ com/compiler/delphi/DelphiParser$ProcedureOrFunctionDeclarationContext.class
 com/compiler/delphi/DelphiParser$BlockContext.class
 com/compiler/delphi/DelphiParser$CaseListElementContext.class
 com/compiler/delphi/DelphiVisitor.class
-DelphiLexer.tokens
 com/compiler/delphi/DelphiParser$SimpleTypeContext.class
 com/compiler/delphi/DelphiParser$UnsignedNumberContext.class
 com/compiler/delphi/DelphiParser$Set_Context.class
 com/compiler/delphi/DelphiParser$DirectiveContext.class
 com/compiler/delphi/DelphiParser$ConstructorDeclarationContext.class
-com/compiler/delphi/DelphiLexer.interp
 com/compiler/delphi/DelphiParser$SetTypeContext.class
 com/compiler/delphi/DelphiParser$RecordSectionContext.class

@@ -1,10 +1,11 @@
-program whileLoop;
+program WhileLoopTest;
 var
-    x : integer;
+  i: Integer;
 begin
-    x := 0;
-    while x < 5 do
-    begin
-        x := x + 1;
-    end;
+  i := 1;
+  while i <= 5 do
+  begin
+    writeln(i);
+    i := i + 1;
+  end;
 end.

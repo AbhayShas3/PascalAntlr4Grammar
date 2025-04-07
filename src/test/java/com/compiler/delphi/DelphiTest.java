@@ -1,114 +1,242 @@
 package com.compiler.delphi;
 
-// Added imports for ANTLR generated classes and the interpreter
-import com.compiler.delphi.DelphiLexer;
-import com.compiler.delphi.DelphiParser;
-import com.compiler.delphi.DelphiInterpreter;
+// Standard Java imports
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
-// Existing ANTLR runtime and JUnit imports
+import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-// Added imports for the ANTLR Error Listener components
-import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
-
-// JUnit imports
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.junit.After;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import static org.junit.Assert.assertEquals; // Keep if needed for future assertions
-import static org.junit.Assert.assertNotNull;
-
 /**
- * JUnit tests for the Delphi Interpreter.
+ * JUnit test for the Delphi Interpreter - testing loop functionality.
  */
 public class DelphiTest {
+    
+    // For capturing stdout during tests
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
+    
+    @Before
+    public void setUpStreams() {
+        // Redirect stdout to our ByteArrayOutputStream
+        System.setOut(new PrintStream(outContent));
+    }
+    
+    @After
+    public void restoreStreams() {
+        // Restore original stdout
+        System.setOut(originalOut);
+    }
 
     /**
      * Helper method to create lexer, parser, and interpreter for a given test file.
      * @param filename The name of the Pascal/Delphi file in src/test/resources/testcases/
-     * @return The result of visiting the parse tree (may be null or specific object depending on interpreter logic)
      * @throws IOException If the test file cannot be read.
      */
-    private Object interpretFile(String filename) throws IOException {
+    private void interpretFile(String filename) throws IOException {
         String fullPath = "testcases/" + filename;
         // Use ClassLoader to reliably find resources within the test classpath
         InputStream is = getClass().getClassLoader().getResourceAsStream(fullPath);
         if (is == null) {
             // Provide a more informative error message if the resource is not found
-            throw new IOException("Could not find resource file: '" + fullPath + "'. Ensure it's in src/test/resources/testcases/");
+            throw new IOException("Could not find resource file: '" + fullPath + 
+                    "'. Ensure it's in src/test/resources/testcases/");
         }
 
-        // Create ANTLR stream, lexer, tokens, parser
-        CharStream input = CharStreams.fromStream(is);
-        DelphiLexer lexer = new DelphiLexer(input);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        DelphiParser parser = new DelphiParser(tokens);
-
-        // Add an error listener for better diagnostics during parsing
-        parser.removeErrorListeners(); // Remove default console error listener
-        parser.addErrorListener(new BaseErrorListener() { // Now finds the symbol
-             @Override // This should now be recognized correctly
-             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) { // Now finds Recognizer and RecognitionException
-                  // Throw an exception to fail the test immediately on syntax error
-                  throw new IllegalStateException("Failed to parse at line " + line + ":" + charPositionInLine + " due to " + msg, e);
-             }
-        });
-
-
-        // Parse the program rule
-        ParseTree tree = parser.program();
-
-        // Create and run the interpreter visitor
-        DelphiInterpreter interpreter = new DelphiInterpreter();
-        return interpreter.visit(tree);
+        try {
+            // Create ANTLR stream, lexer, tokens, parser
+            CharStream input = CharStreams.fromStream(is, StandardCharsets.UTF_8);
+            DelphiLexer lexer = new DelphiLexer(input);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            DelphiParser parser = new DelphiParser(tokens);
+            
+            // Add an error listener for better diagnostics during parsing
+            parser.removeErrorListeners(); // Remove default console error listener
+            parser.addErrorListener(new BaseErrorListener() {
+                 @Override
+                 public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, 
+                                        int line, int charPositionInLine, 
+                                        String msg, RecognitionException e) {
+                      // Throw an exception to fail the test immediately on syntax error
+                      throw new IllegalStateException("Failed to parse at line " + line + ":" + 
+                              charPositionInLine + " due to " + msg, e);
+                 }
+            });
+            
+            // Parse the program rule
+            ParseTree tree = parser.program();
+            
+            // Create and run the interpreter visitor
+            DelphiInterpreter interpreter = new DelphiInterpreter();
+            interpreter.visit(tree);
+            
+            // No return value needed - we're checking the output via System.out capture
+        } finally {
+            // Close the input stream
+            if (is != null) {
+                is.close();
+            }
+        }
+    }
+    
+    /**
+     * Helper method to verify that output contains numbers 1-5 in sequence
+     */
+    private void verifySequentialOutput() {
+        // Get the captured output
+        String capturedOutput = outContent.toString();
+        
+        // Print captured output for debugging
+        System.setOut(originalOut);
+        System.out.println("Output from test: \n" + capturedOutput);
+        
+        // Check that the output contains the expected numbers
+        assertTrue("Output should contain '1'", capturedOutput.contains("1"));
+        assertTrue("Output should contain '2'", capturedOutput.contains("2"));
+        assertTrue("Output should contain '3'", capturedOutput.contains("3"));
+        assertTrue("Output should contain '4'", capturedOutput.contains("4"));
+        assertTrue("Output should contain '5'", capturedOutput.contains("5"));
+        
+        // Make sure these numbers appear in the correct order
+        int pos1 = capturedOutput.indexOf("1");
+        int pos2 = capturedOutput.indexOf("2");
+        int pos3 = capturedOutput.indexOf("3");
+        int pos4 = capturedOutput.indexOf("4");
+        int pos5 = capturedOutput.indexOf("5");
+        
+        assertTrue("Numbers should appear in ascending order", 
+                pos1 < pos2 && pos2 < pos3 && pos3 < pos4 && pos4 < pos5);
     }
 
-    // --- Test Cases ---
-
-    @Test
-    public void testBasicArithmetic() throws IOException {
-        System.out.println("\n--- Testing basicArithmetic.pas ---");
-        Object result = interpretFile("basicArithmetic.pas");
-        // Add more specific assertions based on expected output or final variable states if needed
-        assertNotNull("Interpreter should run without throwing an exception", result); // Basic check
-        System.out.println("--- Finished basicArithmetic.pas ---");
-    }
-
-    @Test
-    public void testProcedureCall() throws IOException {
-        System.out.println("\n--- Testing procedureCall.pas ---");
-        Object result = interpretFile("procedureCall.pas");
-        assertNotNull("Interpreter should run without throwing an exception", result);
-        System.out.println("--- Finished procedureCall.pas ---");
-    }
-
-    @Test
-    public void testIfStatement() throws IOException {
-        System.out.println("\n--- Testing ifStatement.pas ---");
-        Object result = interpretFile("ifStatement.pas");
-        assertNotNull("Interpreter should run without throwing an exception", result);
-        System.out.println("--- Finished ifStatement.pas ---");
-    }
-
-    @Test
-    public void testWhileLoop() throws IOException {
-        System.out.println("\n--- Testing whileLoop.pas ---");
-        Object result = interpretFile("whileLoop.pas");
-        assertNotNull("Interpreter should run without throwing an exception", result);
-        System.out.println("--- Finished whileLoop.pas ---");
-    }
-
+    // --- Basic Loop Tests ---
+    
     @Test
     public void testForLoop() throws IOException {
-        System.out.println("\n--- Testing forLoop.pas ---");
-        Object result = interpretFile("forLoop.pas");
-        assertNotNull("Interpreter should run without throwing an exception", result);
-        System.out.println("--- Finished forLoop.pas ---");
+        runTestAndPrintOutput("forLoop.pas");
+        verifySequentialOutput();
+    }
+    
+    @Test
+    public void testWhileLoop() throws IOException {
+        runTestAndPrintOutput("whileLoop.pas");
+        verifySequentialOutput();
+    }
+    
+    @Test
+    public void testRepeatLoop() throws IOException {
+        runTestAndPrintOutput("repeatLoop.pas");
+        verifySequentialOutput();
+    }
+    
+    // --- Control Flow Tests ---
+    
+    @Test
+    public void testBreakStatement() throws IOException {
+        runTestAndPrintOutput("breakTest.pas");
+        
+        String capturedOutput = outContent.toString();
+        assertTrue("Output should contain '1'", capturedOutput.contains("1"));
+        assertTrue("Output should contain '5'", capturedOutput.contains("5"));
+        assertFalse("Output should not contain '6'", capturedOutput.contains("6"));
+        assertTrue("Output should contain 'Loop exited with break'", 
+                capturedOutput.contains("Loop exited with break"));
+    }
+    
+    @Test
+    public void testContinueStatement() throws IOException {
+        runTestAndPrintOutput("continueTest.pas");
+        
+        String capturedOutput = outContent.toString();
+        assertTrue("Output should contain '1'", capturedOutput.contains("1"));
+        assertTrue("Output should contain '3'", capturedOutput.contains("3"));
+        assertTrue("Output should contain '5'", capturedOutput.contains("5"));
+        assertTrue("Output should contain '7'", capturedOutput.contains("7"));
+        assertTrue("Output should contain '9'", capturedOutput.contains("9"));
+        assertFalse("Output should not contain '2'", capturedOutput.contains("2"));
+        assertFalse("Output should not contain '4'", capturedOutput.contains("4"));
+        assertTrue("Output should contain 'Loop completed with continue'", 
+                capturedOutput.contains("Loop completed with continue"));
+    }
+    
+    // --- Procedure and Function Tests ---
+    
+    @Test
+    public void testSimpleProcedure() throws IOException {
+        runTestAndPrintOutput("simpleProcedure.pas");
+        
+        String capturedOutput = outContent.toString();
+        assertTrue("Output should contain 'Value is: 5'", 
+                capturedOutput.contains("Value is: 5"));
+        assertTrue("Output should contain 'Hello from procedure'", 
+                capturedOutput.contains("Hello from procedure"));
+        assertTrue("Output should contain 'Procedure completed'", 
+                capturedOutput.contains("Procedure completed"));
+    }
+    
+    @Test
+    public void testSimpleFunction() throws IOException {
+        runTestAndPrintOutput("simpleFunction.pas");
+        
+        String capturedOutput = outContent.toString();
+        assertTrue("Output should contain 'GetFive returned: 5'", 
+                capturedOutput.contains("GetFive returned: 5"));
+        assertTrue("Output should contain 'GetTen returned: 10'", 
+                capturedOutput.contains("GetTen returned: 10"));
+        assertTrue("Output should contain 'Sum is: 15'", 
+                capturedOutput.contains("Sum is: 15"));
+    }
+    
+    // --- Scoping Tests ---
+    
+    @Test
+    public void testSimpleScope() throws IOException {
+        runTestAndPrintOutput("simpleScope.pas");
+        
+        String capturedOutput = outContent.toString();
+        assertTrue("Output should show variable x=10 in main", 
+                capturedOutput.contains("In main: x = 10"));
+        assertTrue("Output should show variable x=10 in procedure", 
+                capturedOutput.contains("In OuterProc: x = 10"));
+        assertTrue("Output should show variable y=20 in procedure", 
+                capturedOutput.contains("In OuterProc: y = 20"));
+        assertTrue("Output should show x=15 after modification in procedure", 
+                capturedOutput.contains("Back in main: x = 15"));
+    }
+    
+    // --- Helper method for running tests with standard output ---
+    
+    private void runTestAndPrintOutput(String testFile) throws IOException {
+        // Reset output buffer
+        outContent.reset();
+        
+        // Don't print to the buffer we're testing
+        PrintStream testOut = System.out;
+        System.setOut(originalOut);
+        System.out.println("\n--- Testing " + testFile + " ---");
+        
+        // Restore the test output capture
+        System.setOut(testOut);
+        
+        // Run the interpreter
+        interpretFile(testFile);
+        
+        // Print captured output for debugging
+        System.setOut(originalOut);
+        System.out.println("Output from test: \n" + outContent.toString());
+        
+        System.out.println("--- Finished " + testFile + " test ---");
     }
 }
